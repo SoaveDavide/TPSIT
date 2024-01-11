@@ -3,13 +3,21 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <sys/wait.h>
 #define DIM 10000
 int p;
 int main(int argc, char *argv[])
 {
     int vettore[DIM]; // creazione del vettore
     int n;            // numero inserito dall'utente
-    if (argc != 2)
+    FILE *copia;
+    fopen(argv[2], 'w');
+    if (copia == NULL)
+    {
+        printf("File non aperto\n");
+        exit(1);
+    }
+    if (argc != 3)
     {
         printf("Inserimento di parametri sbagliato\n");
         return 1;
@@ -25,6 +33,7 @@ int main(int argc, char *argv[])
             vettore[i] = random;
             // printf("%d\n", vettore[i]);
         }
+        fclose(copia);
         p = fork();
         if (p > 0)
         {
@@ -52,8 +61,7 @@ int main(int argc, char *argv[])
                         // Scrivo sulla linea di comado sia indice che numero che PID
                         printf("Sono il processo figlio e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
                     }
-                }
-                
+                }                
             }
         }
         else
@@ -66,9 +74,7 @@ int main(int argc, char *argv[])
                         // Scrivo sulla linea di comado sia indice che numero che PID
                         printf("Sono il processo figlio 2 e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
                     }
-                }
-            
-            
+                }            
         }
         return 0;
     }
