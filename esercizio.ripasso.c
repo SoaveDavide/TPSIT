@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     int n;            // numero inserito dall'utente
     FILE *copia;
     unsigned int buffer[DIM];
-    fopen(argv[2], 'w');
+    copia = fopen(argv[2], "w"); 
     if (copia == NULL)
     {
         printf("File non aperto\n");
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
         {
             int random = rand() % 501;
             vettore[i] = random;
-            fwrite(vettore[i], buffer, 1, copia);
+            fwrite(&vettore[i], sizeof(int), 1, copia); 
             // printf("%d\n", vettore[i]);
         }
         fclose(copia);
