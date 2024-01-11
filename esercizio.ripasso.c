@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <time.h>
 #include <sys/wait.h>
@@ -11,6 +10,7 @@ int main(int argc, char *argv[])
     int vettore[DIM]; // creazione del vettore
     int n;            // numero inserito dall'utente
     FILE *copia;
+    unsigned int buffer[DIM];
     fopen(argv[2], 'w');
     if (copia == NULL)
     {
@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
         {
             int random = rand() % 501;
             vettore[i] = random;
+            fwrite(vettore[i], buffer, 1, copia);
             // printf("%d\n", vettore[i]);
         }
         fclose(copia);
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
         else
         {
             // Sono nel secondo figlio
-            for (int i = 6000; i < DIM; i++)
+            for (int i = 6000; i < DIM + 1; i++)
                 {
                     if (n == vettore[i])
                     {
