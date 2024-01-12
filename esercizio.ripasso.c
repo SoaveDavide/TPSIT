@@ -7,76 +7,77 @@
 int p;
 int main(int argc, char *argv[])
 {
+    if (argc != 2)
+    {
+        printf("Inserimento di parametri sbagliato\n");
+        return 1;
+    }
     int vettore[DIM]; // creazione del vettore
     int n;            // numero inserito dall'utente
     FILE *copia;
-    unsigned int buffer[DIM];
-    copia = fopen(argv[2], "w"); 
+    copia = fopen("ripasso.txt", "w"); // apro il file
     if (copia == NULL)
     {
         printf("File non aperto\n");
         exit(1);
     }
-    if (argc != 3)
+
+    n = atoi(argv[1]);
+    // generazione dei numeri casuali
+    srand(time(NULL));
+    for (int i = 0; i < DIM; i++)
     {
-        printf("Inserimento di parametri sbagliato\n");
-        return 1;
+        int random = rand() % 501;
+        vettore[i] = random;
+        // printf("%d\n", vettore[i]);
     }
-    else
+    for (int i = 0; i < DIM; i++)
     {
-        n = atoi(argv[1]);
-        // generazione dei numeri casuali
-        srand(time(NULL));
-        for (int i = 0; i < DIM; i++)
-        {
-            int random = rand() % 501;
-            vettore[i] = random;
-            fwrite(&vettore[i], sizeof(int), 1, copia); 
-            // printf("%d\n", vettore[i]);
-        }
-        fclose(copia);
+        fprintf(copia, "[%d] --> %d\n", i, vettore[i]); // scrivo nel file i numeri
+    }
+    fclose(copia);
+
+    p = fork();
+    if (p > 0)
+    {
+
         p = fork();
         if (p > 0)
         {
-
-            p = fork();
-            if (p > 0)
+            // sono nel padre
+            for (int i = 0; i < 2000; i++)
             {
-                // sono nel padre
-                for (int i = 0; i < 2000; i++)
+                if (n == vettore[i])
                 {
-                    if (n == vettore[i])
-                    {
-                        // Scrivo sulla linea di comado sia indice che numero che PID
-                        printf("Sono il processo padre e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
-                    }
+                    // Scrivo sulla linea di comado sia indice che numero che PID
+                    printf("Sono il processo padre e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
                 }
-            }
-            else
-            {
-                // Sono nel primo figlio
-                for (int i = 2000; i < 6000; i++)
-                {
-                    if (n == vettore[i])
-                    {
-                        // Scrivo sulla linea di comado sia indice che numero che PID
-                        printf("Sono il processo figlio e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
-                    }
-                }                
             }
         }
         else
         {
-            // Sono nel secondo figlio
-            for (int i = 6000; i < DIM + 1; i++)
+            // Sono nel primo figlio
+            for (int i = 2000; i < 6000; i++)
+            {
+                if (n == vettore[i])
                 {
-                    if (n == vettore[i])
-                    {
-                        // Scrivo sulla linea di comado sia indice che numero che PID
-                        printf("Sono il processo figlio 2 e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
-                    }
-                }            
+                    // Scrivo sulla linea di comado sia indice che numero che PID
+                    printf("Sono il processo figlio e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
+                }
+            }
         }
-        return 0;
     }
+    else
+    {
+        // Sono nel secondo figlio
+        for (int i = 6000; i < DIM + 1; i++)
+        {
+            if (n == vettore[i])
+            {
+                // Scrivo sulla linea di comado sia indice che numero che PID
+                printf("Sono il processo figlio 2 e ho PID = %d. Il numero: %d si trova all'indice:%d\n", getpid(), n, i);
+            }
+        }
+    }
+    return 0;
 }
