@@ -1,0 +1,5 @@
+pendent from those of another function call.
+A stack pointer register tracks the top of the stack (i.e., how much of the stack area the process is currently using), and it is adjusted each time a value is “pushed” onto the stack. If the stack pointer meets the heap pointer (or if it eventually reaches the limit posed by RLIMIT_STACK), the available free memory is exhausted.
+
+– Heap: Heap is the segment where dynamic memory allocation usually takes place, i.e., to allocate memory requested by the programmer for variables whose size can be only known at run-time and cannot be statically determined by the compiler before program execution. The heap area begins at the end of the BSS segment and grows upwards to higher memory addresses. It is managed by malloc/new, free/delete, which may use the brk and sbrk system calls to adjust its size.
+This area is shared by all shared libraries and dynamically loaded modules in a process.
