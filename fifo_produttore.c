@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
     int fd;
-    if (mkfifo("sumo", 0666) == -1)
+    if (mkfifo("sumo", 0777) == -1)
     {
         perror("mkfifo");
         return 1;

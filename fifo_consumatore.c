@@ -11,7 +11,7 @@
 int main(int argc, char *argv[])
 {
     int fd;
-    if (mkfifo("sumo", 0666) < 0)
+    if (mkfifo("sumo", 0777) < 0)
     {
         printf("fifo non creata\n");
         return 1;
