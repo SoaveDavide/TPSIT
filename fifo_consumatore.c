@@ -11,17 +11,18 @@
 int main(int argc, char *argv[])
 {
     int fd;
-    if (mkfifo("sumo", 0777) < 0)
+    /*if (mkfifo("sumo", 0777) < 0)
     {
         printf("fifo non creata\n");
         return 1;
-    }
+    }*/
     int somma;
     int vettore[TOT];
     fd = open("sumo", O_RDONLY);
-    if (read(fd, &vettore, sizeof(vettore)) == -1)
+    if (read(fd, vettore, sizeof(vettore)) == -1)
     {
         printf("Non sono riuscito a leggere\n");
+        close(fd);
         return 2;
     }
     printf("Sono riuscito a leggere dalla FIFO\n");

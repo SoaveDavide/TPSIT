@@ -10,11 +10,11 @@
 int main(int argc, char *argv[])
 {
     int fd;
-    if (mkfifo("sumo", 0777) == -1)
+    /*if (mkfifo("sumo", 0777) == -1)
     {
         perror("mkfifo");
         return 1;
-    }
+    }*/
     int vettore[TOT];
     fd = open("sumo", O_WRONLY);
     for (int i = 0; i < TOT; i++)
@@ -23,9 +23,10 @@ int main(int argc, char *argv[])
         vettore[i] = r;
     }
 
-    if (write(fd, &vettore, sizeof(vettore)) == -1)
+    if (write(fd, vettore, sizeof(vettore)) == -1)
     {
         printf("\nLa scrittura è avvenuta in maniera sbagliata");
+        close(fd);
         return 1;
     }
     printf("\n Ho scritto nella FIFO");
