@@ -9,7 +9,7 @@
 #include <string.h>
 #define DIM 1024
 
-int fd, p, n, controllo;
+int fd, p, n;
 unsigned char buffer[DIM];
 int main(int argc, char *argv[])
 {
@@ -24,12 +24,8 @@ int main(int argc, char *argv[])
         }
         if (p > 0) // padre
         {
-            fd = open("fchat2", O_WRONLY);
+            fd = open("fchat1", O_WRONLY);
             scanf("%s", buffer);
-		 if(strcmp(buffer, "HALT") == 1)
-			{
-				controllo = 1;
-			}
             n = write(fd, buffer, sizeof(buffer));
             if (n < 0)
             {
@@ -40,7 +36,7 @@ int main(int argc, char *argv[])
         }
         else // figlio
         {
-            fd = open("fchat1", O_RDONLY);
+            fd = open("fchat2", O_RDONLY);
             n = read(fd, buffer, sizeof(buffer));
             if (n < 0)
             {
@@ -50,6 +46,6 @@ int main(int argc, char *argv[])
             printf("%s", buffer);
             close(fd);
         }
-    } while (controllo != 1);
+    } while(1);
     return 0;
 }
