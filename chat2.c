@@ -1,89 +1,70 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
 
-#define DIM 1024
-
+#define DIM_STR 50
+#define RED "\e[0;31m"
+#define BLUE "\x1b[34m"
 int fd, p, n;
 char *message;
-
 int main(int argc, char *argv[])
 {
-    message = (char *)malloc(DIM);
-
-    do
+    p = fork();
+    if (p < 0)
     {
-        p = fork();
-        if (p < 0)
+        printf("errore generazione figlio\n");
+        exit(-1);
+    }
+    if (p > 0) // padre
+    {
+        fd = open("fchat2", O_WRONLY);
+        message = malloc(DIM_STR);
+        while (1)
         {
-            printf("errore generazione figlio\n");
-            free(message);
+            printf(RED "User 2: ");
+            fgets(message, DIM_STR, stdin);
+            n = write(fd, message, DIM_STR);
+            if (n < 0)
+            {
+                printf("errore in scrittura\n");
+                exit(-1);
+                free(message);
+                close(fd);
+            }
+            if (strcmp(message, "HALT\n") == 0)
+            {
+                close(fd);
+                free(message);
+                exit(1);
+            }
+        }
+    }
+    else // figlio
+    {
+        fd = open("fchat1", O_RDONLY);
+        message = malloc(DIM_STR);
+        n = read(fd, message, DIM_STR);
+        if (n < 0)
+        {
+            printf("errore in lettura\n");
             exit(-1);
+            free(message);
+            close(fd);
         }
-
-        if (p > 0)
-        { // padre
-            fd = open("fchat2", O_WRONLY);
-            if (fd < 0)
-            {
-                printf("errore apertura file in scrittura\n");
-                free(message);
-                exit(-1);
-            }
-            printf("Inserisci un messaggio (o HALT per terminare): ");
-            fgets(message, DIM, stdin);
-
-            n = write(fd, message, strlen(message) + 1);
-            if (n < 0)
-            {
-                printf("errore scrittura\n");
-                free(message);
-                exit(-1);
-            }
-
-            // Controllo per terminare il ciclo nel padre
-            if (strcmp(message, "HALT\n") == 0)
-            {
-                printf("Chat terminata\n");
-                free(message);
-                close(fd);
-                exit(0);
-            }
+        printf(BLUE "User 1: %s", message);
+        
+        if (strcmp(message, "HALT\n") == 0)
+        {
+            close(fd);
+            free(message);
+            exit(1);
         }
-        else
-        { // figlio
-            fd = open("fchat1", O_RDONLY);
-            if (fd < 0)
-            {
-                printf("errore apertura file in lettura\n");
-                free(message);
-                exit(-1);
-            }
-
-            n = read(fd, message, DIM);
-            if (n < 0)
-            {
-                printf("errore lettura\n");
-                free(message);
-                exit(-1);
-            }
-
-            // Controllo per terminare il ciclo nel figlio
-            if (strcmp(message, "HALT\n") == 0)
-            {
-                printf("Chat terminata\n");
-                free(message);
-                close(fd);
-                exit(0);
-            }
-            printf("%s", message);
-        }
-    } while (1);
-
+    }
     return 0;
 }
