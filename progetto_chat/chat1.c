@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
         while (1)
         {
             printf(BLUE "User 1: ");
-            fgets(message, DIM_STR, stdin);
+            fgets(message, DIM_STR, stdin);//al posto della scanf
             n = write(fd, message, DIM_STR);
             if (n < 0)
             {
