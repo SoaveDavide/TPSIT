@@ -25,6 +25,9 @@ int main(int argc, char *argv[]) // questo programma diventa processo ma anche t
 {
     // creare tre variabili di tipo thread
     pthread_t threadGiorno, threadSera, threadNotte;
+    char *msg1 = "Buongiorno";
+    char *msg1 = "BuonaSera";
+    char *msg1 = "Buonanotte";
     printf("ciao\n");
 
     pthread_create(&threadGiorno, NULL, &stampaBuongiorno, NULL);
