@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
         if (n > 0)
         {
             fwrite(buffer,1,n,destinazione);//Leggo n byte alla volta fino al massimo scrivo sul file di destinazione
-
         }
         fclose(origine);
         fclose(destinazione);
