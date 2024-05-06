@@ -7,13 +7,14 @@ unsigned char buffer[BUFFER_DIM];
 FILE *sorgente, *destinazione;
 void *Lettura(void *s)
 {
-    pthread_t scrittura;
     //continuo a leggere fino a quando ci sono dati all'interno del file
     while (fread(buffer, 1, sizeof(buffer), sorgente) > 0)
     { 
+        pthread_t scrittura;
         pthread_create(&scrittura, NULL, Scrittura, NULL);
+        pthread_join(scrittura, NULL);
     }
-    pthread_join(scrittura, NULL);
+    
     return NULL;
 }
 
