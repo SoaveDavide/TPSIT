@@ -2,24 +2,31 @@
 #include <string.h>
 #include <stdio.h>
 #include <pthread.h>
-#define BUFFER_DIM 1024
 
-unsigned char buffer[BUFFER_DIM];
+#define DEFAULT_BUFFER_SIZE 1024
+
+unsigned char *buffer = NULL;
+size_t buffer_size = 0;
+
 FILE *sorgente, *destinazione;
 
-void *Lettura(void *s)
+void *Lettura(void *arg)
 {
     size_t bytesRead;
-    while ((bytesRead = fread(buffer, 1, sizeof(buffer), sorgente)) > 0)
-    { 
-        
+    while ((bytesRead = fread(buffer, 1, buffer_size, sorgente)) > 0)
+    {
+        // passa il numero di byte da leggere alla funzione Scrittura
+        Scrittura((void*)bytesRead);
+        //Quando la funzione Lettura legge un certo numero di byte dal file di origine, 
+        //passa questa quantità alla funzione Scrittura come argomento.
     }
     return NULL;
 }
 
-void *Scrittura(void *s)
+void *Scrittura(void *arg)
 {
-    size_t bytesToWrite = (size_t)s;
+    //rappresenta il numero di byte da scrivere nel file di destinazione
+    size_t bytesToWrite = (size_t)arg;
     fwrite(buffer, 1, bytesToWrite, destinazione);
     return NULL;
 }
@@ -31,14 +38,14 @@ int main(int argc, char *argv[])
     if (argc != 3)
     {
         printf("Numero parametri insufficiente\n");
-        return 0;
+        return 1;
     }
 
     sorgente = fopen(argv[1], "rb");
     if (sorgente == NULL)
     {
         printf("File sorgente non aperto correttamente\n");
-        return 0;
+        return 1;
     }
 
     destinazione = fopen(argv[2], "wb");
@@ -46,17 +53,18 @@ int main(int argc, char *argv[])
     {
         printf("File destinazione non aperto correttamente\n");
         fclose(sorgente);
-        return 0;
+        return 1;
     }
 
-    pthread_create(&lettura, NULL, Lettura, NULL);
-    pthread_create(&scrittura, NULL, Scrittura, NULL);
 
-    pthread_join(lettura, NULL); // Aspetta che il thread di lettura finisca prima di chiudere i file
-    pthread_join(scrittura, NULL); // Aspetta che il thread di scrittura finisca prima di continuare la lettura
+    pthread_create(&lettura, NULL, Lettura, NULL);
+    pthread_join(lettura, NULL); // Wait for the reading thread to finish
     
     fclose(sorgente);
     fclose(destinazione);
+
+    // Free dynamically allocated memory
+    free(buffer);
 
     return 0;
 }
