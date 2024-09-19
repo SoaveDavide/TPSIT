@@ -12,7 +12,13 @@ void Inserimento(int vettore[DIM])
         vettore[i] = rand() % 101; // Numeri casuali tra 0 e 100
     }
 }
-
+void Stampa(int vettore[DIM])
+{
+    for(int i = 0; i < DIM; i++)
+    {
+        printf("%d\n", vettore[i]);
+    }
+}
 void Menu()
 {
     printf("[1] Visualizzare a video gli elementi dell’array\n");    
@@ -41,6 +47,9 @@ int main()
     switch(scelta)
     {
         case 1:
+            //Visualizzazione dell'array
+            printf("I numeri dell'array sono: \n");
+            Stampa(vettore);
         break;
         case 2:
         break;
