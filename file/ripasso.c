@@ -46,14 +46,70 @@ void Invertito(int vettore[DIM])
         printf("%d\n", vettore[i]);
     }
 }
-void Ricerca(int ricerca, int vettore[DIM])
+int Ricerca(int ricerca, int vettore[DIM])
 {
     for (int i = 0; i < DIM; i++)
     {
         if (ricerca == vettore[i])
         {
-            printf("Il numero ricercato è: %d\n", vettore[i]);
+            return i;
         }
+    }
+}
+int Somma(int vettore[DIM])
+{
+    int somma = 0;
+    for (int i = 0; i < DIM; i++)
+    {
+        somma += vettore[i];
+    }
+    return somma;
+}
+float Media(int vettore[DIM])
+{
+    int somma = Somma(vettore);
+    float media;
+    media = somma / DIM;
+    return media;
+}
+void Riordino(int vettore[DIM])
+{
+    // bubble sort
+    for (int i = 0; i < DIM; i++)
+    {
+        for (int j = 0; j < DIM - i - 1; j++)
+        {
+            if (vettore[j] > vettore[j + 1])
+            {
+                int tmp = vettore[j];
+                vettore[j] = vettore[j + 1];
+                vettore[j + 1] = tmp;
+            }
+        }
+    }
+}
+void Elimina(int vettore[], int *n, int elimina)
+{
+    int posizione = Ricerca(elimina, vettore);
+
+    if (posizione == -1)
+    {
+        printf("Elemento non trovato\n");
+        return; // Esce dalla funzione se l'elemento non esiste
+    }
+
+    // eliminazione
+    for (int i = posizione; i < (*n - 1); i++)
+    {
+        vettore[i] = vettore[i + 1];
+    }
+    // riduzione elementi nell'array
+    (*n)--;
+
+    printf("Elemento eliminato. Nuovo array:\n");
+    for (int i = 0; i < *n; i++)
+    {
+        printf("%d\n", vettore[i]);
     }
 }
 void Menu()
@@ -66,7 +122,7 @@ void Menu()
     printf("[6] Ricercare un numero (letto in input) nell’array\n");
     printf("[7] Eliminare un elemento (letto in input) dell’array\n");
     printf("[8] Alternare (o scambiare) a due a due le posizioni del vettore\n");
-    printf("[9] Ordinare il vettore\n");
+    printf("[9] Ordinare il vettore (ordine crescente)\n");
     printf("[10] Uscire\n");
 }
 int main(int argc, char *argv[])
@@ -93,6 +149,11 @@ int main(int argc, char *argv[])
             Invertito(vettore);
             break;
         case 3:
+            float media = Media(vettore);
+            int somma = Somma(vettore);
+            printf("La somma è: %d\n", somma);
+            printf("La media è: %f\n", media);
+
             break;
         case 4:
             printf("I numeri pari sono: \n");
@@ -106,13 +167,20 @@ int main(int argc, char *argv[])
             int ricerca;
             printf("Inserisci il numero da ricercare:\n");
             scanf("%d", &ricerca);
-            Ricerca(ricerca, vettore);
+            int posizione = Ricerca(ricerca, vettore);
+            printf("Il numero ricercato si trova nella posizione: %d", posizione + 1);
             break;
         case 7:
+            int n = DIM;
+            printf("Inserire il numero che si vuole eliminare\n");
+            int eliminato;
+            scanf("%d", &eliminato);
+            Elimina(vettore, &n, eliminato);
             break;
         case 8:
             break;
         case 9:
+            Riordino(vettore);
             break;
         case 10:
             uscire = 1;
