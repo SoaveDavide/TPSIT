@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#define DIM 5
+#define DIM 6
 
 void Inserimento(int vettore[DIM])
 {
@@ -112,6 +112,27 @@ void Elimina(int vettore[], int *n, int elimina)
         printf("%d\n", vettore[i]);
     }
 }
+void Scambio(int vettore[DIM])
+{
+    if (DIM % 2 == 0) // se è pari
+    {
+        for (int i = 0; i < DIM - 1; i += 2)
+        {
+            int tmp = vettore[i];
+            vettore[i] = vettore[i + 1];
+            vettore[i + 1] = tmp;
+        }
+    }
+    else // se è dispari
+    {
+        for (int i = 0; i < DIM - 2; i += 2) // i+=2 per passare alla coppia sucessiva mentre size - 1 per evitare di inserire l'elemento nella posizione [size] che porterebbe a un comportamento anomalo
+        {
+            int tmp = vettore[i];
+            vettore[i] = vettore[i + 1];
+            vettore[i + 1] = tmp;
+        }
+    }
+}
 void Menu()
 {
     printf("[1] Visualizzare a video gli elementi dell’array\n");
@@ -178,6 +199,7 @@ int main(int argc, char *argv[])
             Elimina(vettore, &n, eliminato);
             break;
         case 8:
+            Scambio(vettore);
             break;
         case 9:
             Riordino(vettore);
