@@ -15,6 +15,7 @@
 int main(int argc, char **argv)
 { // creazione di un elemento di tipo sockaddr vedi pagina 162
     struct sockaddr_in servizio;
+    int check;
     // inizializzazione dell'elemento di tipo sockaddr
     servizio.sin_family = AF_INET;
     servizio.sin_addr.s_addr = htonl(INADDR_ANY); //  La funzione htonl accetta un numero a 32 bit in ordine di byte host e restituisce un numero a 32 bit nell'ordine dei byte di rete usato nelle reti TCP/IP (la famiglia di indirizzi AF_INET o AF_INET6).
@@ -28,6 +29,15 @@ int main(int argc, char **argv)
     printf("Inserisci la stringa\n");
     scanf("%s", str1);
     write(socketfd, str1, sizeof(str1));
+    read(socketfd, &check, sizeof(check));
+    if (check == 1)
+    {
+        printf("La stringa è palindroma\n");
+    }
+    else
+    {
+        printf("La stringa non è palindroma\n");
+    }
     close(socketfd);
     return 0;
 }
